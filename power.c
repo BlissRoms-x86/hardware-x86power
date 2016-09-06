@@ -21,6 +21,10 @@
 
 #include <hardware/hardware.h>
 #include <hardware/power.h>
+#include <cutils/properties.h>
+#include <cutils/probe_module.h>
+
+extern int delete_module(const char *, unsigned int);
 
 #define SYS_CPU "/sys/devices/system/cpu"
 #define CPU_ONLINE "1"
@@ -51,6 +55,24 @@ static void power_init(struct power_module *module)
 
 static void power_set_interactive(struct power_module *module, int on)
 {
+    char mod[PROPERTY_VALUE_MAX];
+    if ((!property_get("wlan.no-unload-driver", mod, NULL) || strcmp(mod, "1"))
+            && property_get("wlan.modname", mod, NULL)) {
+        if (on) {
+            if (insmod_by_dep(mod, "", NULL, 0, NULL)) {
+                ALOGE("insmod %s failed", mod);
+            } else {
+                ALOGD("reload %s OK", mod);
+            }
+        } else {
+            if (delete_module(mod, O_NONBLOCK)) {
+                ALOGE("rmmod %s failed", mod);
+            } else {
+                ALOGD("unload %s OK", mod);
+            }
+        }
+    }
+
     set_nonboot_cpu_state(on ? CPU_ONLINE : CPU_OFFLINE);
 }
 
