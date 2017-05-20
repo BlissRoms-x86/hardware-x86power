@@ -30,13 +30,15 @@ extern int delete_module(const char *, unsigned int);
 #define CPU_ONLINE "1"
 #define CPU_OFFLINE "0"
 
+#define UNUSED __attribute__((__unused__))
+
 static void set_nonboot_cpu_state(const char *state)
 {
     static int cpu_n_fd;
     char p[PATH_MAX];
-    int cpu_n = 1;
+    int cpu_n;
 
-    for (;;) {
+    for (cpu_n = 1; ; cpu_n++) {
         snprintf(p, PATH_MAX, SYS_CPU "/cpu%d/online", cpu_n);
         cpu_n_fd = open(p, O_RDWR);
         if (cpu_n_fd < 0) {
@@ -45,15 +47,14 @@ static void set_nonboot_cpu_state(const char *state)
         ALOGV("Set CPU%d_online state %s ", cpu_n, state);
         write(cpu_n_fd, state, 1);
         close(cpu_n_fd);
-		cpu_n++;
     }
 }
 
-static void power_init(struct power_module *module)
+static void power_init(struct power_module *module UNUSED)
 {
 }
 
-static void power_set_interactive(struct power_module *module, int on)
+static void power_set_interactive(struct power_module *module UNUSED, int on)
 {
     char mod[PROPERTY_VALUE_MAX];
     if ((!property_get("wlan.no-unload-driver", mod, NULL) || strcmp(mod, "1"))
@@ -76,8 +77,8 @@ static void power_set_interactive(struct power_module *module, int on)
     set_nonboot_cpu_state(on ? CPU_ONLINE : CPU_OFFLINE);
 }
 
-static void power_hint(struct power_module *module, power_hint_t hint,
-                       void *data) {
+static void power_hint(struct power_module *module UNUSED, power_hint_t hint, void *data UNUSED)
+{
     switch (hint) {
     default:
         break;
