@@ -57,7 +57,7 @@ static void power_init(struct power_module *module UNUSED)
 static void power_set_interactive(struct power_module *module UNUSED, int on)
 {
     char mod[PROPERTY_VALUE_MAX];
-    if ((!property_get("wlan.no-unload-driver", mod, NULL) || strcmp(mod, "1"))
+    if (!property_get_bool("wlan.no-unload-driver", 0)
             && property_get("wlan.modname", mod, NULL)) {
         if (on) {
             if (insmod_by_dep(mod, "", NULL, 0, NULL)) {
