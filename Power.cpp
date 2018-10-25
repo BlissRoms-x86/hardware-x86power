@@ -1,4 +1,4 @@
-#define LOG_TAG "android.hardware.power@1.0-service-x86"
+#define LOG_TAG "android.hardware.power@1.0-service.x86"
 
 #include <android-base/file.h>
 #include "Power.h"
