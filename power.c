@@ -74,7 +74,9 @@ static void power_set_interactive(struct power_module *module UNUSED, int on)
         }
     }
 
-    set_nonboot_cpu_state(on ? CPU_ONLINE : CPU_OFFLINE);
+    if (property_get_bool("power.nonboot-cpu-off", 1)) {
+        set_nonboot_cpu_state(on ? CPU_ONLINE : CPU_OFFLINE);
+    }
 }
 
 static void power_hint(struct power_module *module UNUSED, power_hint_t hint, void *data UNUSED)
