@@ -24,7 +24,7 @@ LOCAL_C_INCLUDES += $(LOCAL_PATH) \
                     hardware/include \
                     system/native/include
 
-LOCAL_MODULE := power.$(TARGET_BOARD_PLATFORM)
+LOCAL_MODULE := power.x86
 LOCAL_PROPRIETARY_MODULE := true
 LOCAL_MODULE_RELATIVE_PATH := hw
 LOCAL_HEADER_LIBRARIES += libhardware_headers
