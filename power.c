@@ -22,7 +22,9 @@
 #include <hardware/hardware.h>
 #include <hardware/power.h>
 #include <cutils/properties.h>
+#if 0
 #include <cutils/probe_module.h>
+#endif
 
 extern int delete_module(const char *, unsigned int);
 
@@ -56,6 +58,7 @@ static void power_init(struct power_module *module UNUSED)
 
 static void power_set_interactive(struct power_module *module UNUSED, int on)
 {
+#if 0
     char mod[PROPERTY_VALUE_MAX];
     if (!property_get_bool("wlan.no-unload-driver", 0)
             && property_get("wlan.modname", mod, NULL)) {
@@ -73,6 +76,7 @@ static void power_set_interactive(struct power_module *module UNUSED, int on)
             }
         }
     }
+#endif
 
     if (property_get_bool("power.nonboot-cpu-off", 1)) {
         set_nonboot_cpu_state(on ? CPU_ONLINE : CPU_OFFLINE);
